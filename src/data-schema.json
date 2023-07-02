@@ -1,0 +1,215 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Generated schema for Root",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "session_name": {
+      "type": "string"
+    },
+    "session_data": {
+      "type": "object",
+      "properties": {
+        "players": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "player_id": {
+                "type": "string"
+              },
+              "player_name": {
+                "type": "string"
+              },
+              "worlds": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "world_id": {
+                      "type": "string"
+                    },
+                    "world_name": {
+                      "type": "string"
+                    },
+                    "islands": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "island_id": {
+                            "type": "string"
+                          },
+                          "island_name": {
+                            "type": "string"
+                          },
+                          "island_inventory": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "value"
+                              ]
+                            }
+                          },
+                          "island_production": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "value"
+                              ]
+                            }
+                          },
+                          "island_consumption": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "name": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "name",
+                                "value"
+                              ]
+                            }
+                          },
+                          "island_buildings_summary": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "count": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "count"
+                              ]
+                            }
+                          },
+                          "island_production_buildings": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string"
+                                },
+                                "efficiency": {
+                                  "type": "string"
+                                },
+                                "production": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "rate": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "rate"
+                                    ]
+                                  }
+                                },
+                                "consumption": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "name": {
+                                        "type": "string"
+                                      },
+                                      "rate": {
+                                        "type": "number"
+                                      }
+                                    },
+                                    "required": [
+                                      "name",
+                                      "rate"
+                                    ]
+                                  }
+                                }
+                              },
+                              "required": [
+                                "type",
+                                "efficiency",
+                                "production",
+                                "consumption"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "island_id",
+                          "island_name",
+                          "island_inventory",
+                          "island_production",
+                          "island_consumption",
+                          "island_buildings_summary",
+                          "island_production_buildings"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "world_id",
+                    "world_name",
+                    "islands"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "player_id",
+              "player_name",
+              "worlds"
+            ]
+          }
+        }
+      },
+      "required": [
+        "players"
+      ]
+    }
+  },
+  "required": [
+    "session_id",
+    "session_name",
+    "session_data"
+  ]
+}

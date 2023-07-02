@@ -1,0 +1,13 @@
+global:
+  scrape_interval:     1s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+
+scrape_configs:
+  - job_name: 'prometheus' # The job name is added as a label `job=<job_name>` to any time series scraped from this config.
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'nodeapp'
+    scrape_interval: 1s
+    static_configs:
+      - targets: ['localhost:3033'] # Replace with the port your Node.js server is running on.

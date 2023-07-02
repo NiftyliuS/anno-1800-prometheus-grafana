@@ -1,0 +1,70 @@
+{
+  "session_id": "string",
+  "session_name": "string?",
+  "session_data": {
+    "players": [
+      {
+        "player_id": "string",
+        "player_name": "string",
+        "worlds": [
+          {
+            "world_id": "string",
+            "world_name": "string",
+            "islands": [
+
+
+
+              {
+                "island_id": "string",
+                "island_name": "string",
+                "island_inventory": [
+                  {
+                    "name": "string",
+                    "value": 10
+                  }
+                ],
+                "island_production": [
+                  {
+                    "name": "string",
+                    "value": 2.1
+                  }
+                ],
+                "island_consumption": [
+                  {
+                    "name": "string",
+                    "value": 2.2
+                  }
+                ],
+                "island_buildings_summary": [
+                  {
+                    "type": "string",
+                    "count": 1.1
+                  }
+                ],
+                "island_production_buildings":[
+                  {
+                    "building_id": "string",
+                    "type": "string",
+                    "efficiency": "number",
+                    "production": [
+                      {
+                        "name": "string",
+                        "rate": 12.0
+                      }
+                    ],
+                    "consumption": [
+                      {
+                        "name": "string",
+                        "rate": 2.0
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
