@@ -4,8 +4,7 @@
   "description": "",
   "main": "prometheus-converter.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start-dev": "DATA_URL='http://localhost:3033/metrics-sample' node ./prometheus-converter.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
