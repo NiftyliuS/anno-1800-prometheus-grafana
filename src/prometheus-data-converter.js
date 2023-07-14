@@ -1,4 +1,4 @@
-const ZERO_VALUE=0.000001;
+const ZERO_VALUE = 0.000001;
 const metricStats = {
     island_inventory_resource: [
         ``,
@@ -144,18 +144,40 @@ const convertIslandToPrometheus = (baseLabelParts, island, index) => {
         `island_id="${island.island_id}"`,
         `island_name="${island.island_name || `Island ${index}`}"`,
     );
+    const {
+        island_inventory,
+        island_production,
+        island_consumption,
+        island_production_buildings,
+        island_buildings_summary,
+    } = island;
+
+    if (process.env.ADD_HARBOR) {
+        island_buildings_summary.push({
+            type: 'Harbor',
+            count: 1
+        });
+        if (process.env.DEBUG) console.log(`      * Added Harbor, count 1 to island ${island.island_id}`)
+    }
     const aggregateArray = [
-        island.island_inventory && convertIslandInventoryToPrometheus(baseLabelParts, island.island_inventory),
-        island.island_production && convertIslandProductionToPrometheus(baseLabelParts, island.island_production),
-        island.island_consumption && convertIslandConsumptionToPrometheus(baseLabelParts, island.island_consumption),
-        island.island_buildings_summary && convertIslandBuildingsSummaryToPrometheus(baseLabelParts, island.island_buildings_summary),
-        island.island_production_buildings && convertIslandProductionBuildingEfficiencyToPrometheus(baseLabelParts, island.island_production_buildings),
-        island.island_production_buildings && convertIslandProductionBuildingConsumptionToPrometheus(baseLabelParts, island.island_production_buildings),
-        island.island_production_buildings && convertIslandProductionBuildingProductionToPrometheus(baseLabelParts, island.island_production_buildings),
-    ];
+        island_inventory && convertIslandInventoryToPrometheus(baseLabelParts, island_inventory),
+        island_production && convertIslandProductionToPrometheus(baseLabelParts, island_production),
+        island_consumption && convertIslandConsumptionToPrometheus(baseLabelParts, island_consumption),
+        island_production_buildings && convertIslandProductionBuildingEfficiencyToPrometheus(baseLabelParts, island_production_buildings),
+        island_production_buildings && convertIslandProductionBuildingConsumptionToPrometheus(baseLabelParts, island_production_buildings),
+        island_production_buildings && convertIslandProductionBuildingProductionToPrometheus(baseLabelParts, island_production_buildings),
+        island_buildings_summary && convertIslandBuildingsSummaryToPrometheus(baseLabelParts, island_buildings_summary),
+        // Add default Harbor for player owned islands manually because its not technically a building
+    ].filter(val => !!val);
 
+    if (process.env.DEBUG) {
+        console.log(`      Island ID: ${island.island_id} - metrics: ${
+            aggregateArray.reduce((total, {rows}) => total + rows.length, 0)
+        }`);
+        console.log(`      Island Label:\n${baseLabelParts.map(v => `        ${v}`).join('\n')}`);
+    }
 
-    return aggregateArray.filter(val=>!!val);
+    return aggregateArray;
 }
 
 const convertWorldToPrometheus = (baseLabelParts, world, index) => {
@@ -163,8 +185,13 @@ const convertWorldToPrometheus = (baseLabelParts, world, index) => {
         `world_id="${world.world_id}"`,
         `world_name="${world.world_name || `World ${index}`}"`,
     );
+    if (process.env.DEBUG) {
+        console.log(`  World ID: ${world.world_id} - Islands (${world.islands.length}): ${world.islands.map(({island_id}) => island_id).join()}`)
+        console.log(`  World Label:\n${baseLabelParts.map(v => `    ${v}`).join('\n')}`)
+    }
     return world.islands.reduce(
         (agr, island, index) => {
+            if (process.env.DEBUG) console.log(' ')
             agr.push(...convertIslandToPrometheus([...baseLabelParts], island, index));
             return agr;
         }, []
@@ -177,8 +204,12 @@ const convertPlayerDataToPrometheus = (baseLabelParts, player, index) => {
         `player_id="${player.player_id}"`,
         `player_name="${player.player_name || `Player ${index}`}"`,
     );
+    if (process.env.DEBUG) {
+        console.log(`Player ID: ${player.player_id} - Worlds (${player.worlds.length}): ${player.worlds.map(({world_id}) => world_id).join()}`)
+    }
     return player.worlds.reduce(
         (agr, world, index) => {
+            if (process.env.DEBUG) console.log(' ')
             agr.push(...convertWorldToPrometheus([...baseLabelParts], world, index));
             return agr;
         }, []
@@ -209,8 +240,15 @@ const convertAnnoJsonToPrometheus = (data) => {
         `session_id="${data.session_id}"`,
         `session_name="${data.session_name || 'Current Session'}"`,
     ]
+
+    if (process.env.DEBUG) {
+        console.log(' ');
+        console.log(`Session ID: ${data.session_id} - Players (${players.length}): ${players.map(({player_id}) => player_id).join()}`);
+    }
+
     const metrics = players.reduce(
         (agr, player, index) => {
+            if (process.env.DEBUG) console.log(' ')
             agr.push(...convertPlayerDataToPrometheus([...labelParts], player, index));
             return agr;
         }, []

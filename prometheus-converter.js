@@ -11,14 +11,12 @@ app.get('/metrics-sample', (req, res) => {
 })
 
 app.get('/metrics', (req, res) => {
-
     (async () => {
         if (!process.env.DATA_URL) {
             console.log('Sample metrics sent!');
             const sampleData = generateRandomData();
             return convertAnnoJsonToPrometheus(sampleData);
         }
-
         const res = await axios.get(process.env.DATA_URL, {
             headers: {
                 Accept: 'application/json',
@@ -26,14 +24,18 @@ app.get('/metrics', (req, res) => {
             }
         });
         if (process.env.DEBUG) {
-            console.log("Got data of type ", typeof res.data, ":");
-            try{
-                console.log(JSON.stringify(res.data, null, 2));
+            console.log(` `);
+            console.log(`>>> Gathering Metrics from ${process.env.DATA_URL}`);
+            console.log("Got data of type", typeof res.data);
+            try {
+                if (process.env.DEBUG_INPUT)
+                    console.log('Data: ', JSON.stringify(res.data, null, 2));
             } catch (e) {
                 console.log(res.data || null)
             }
         }
         const {data} = res;
+        console.log(`Converting data for Prometheus`);
         return convertAnnoJsonToPrometheus(data);
     })().then((data) => res.send(data)).catch((e) => {
         console.error(e);
