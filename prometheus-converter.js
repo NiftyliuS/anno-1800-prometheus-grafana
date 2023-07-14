@@ -19,12 +19,21 @@ app.get('/metrics', (req, res) => {
             return convertAnnoJsonToPrometheus(sampleData);
         }
 
-        const {data} = await axios.get(process.env.DATA_URL, {
+        const res = await axios.get(process.env.DATA_URL, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json'
             }
         });
+        if (process.env.DEBUG) {
+            console.log("Got data of type ", typeof res.data, ":");
+            try{
+                console.log(JSON.stringify(res.data, null, 2));
+            } catch (e) {
+                console.log(res.data || null)
+            }
+        }
+        const {data} = res;
         return convertAnnoJsonToPrometheus(data);
     })().then((data) => res.send(data)).catch((e) => {
         console.error(e);
